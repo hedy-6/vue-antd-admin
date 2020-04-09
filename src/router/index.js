@@ -10,6 +10,7 @@ const router = new VueRouter({
   routes: [
     {
       path: "/user",
+      hideInMenu: true,
       component: () =>
         import(/* webpackChunkName: "layout" */ "../layouts/UserLayout"),
       children: [
@@ -44,6 +45,7 @@ const router = new VueRouter({
         {
           path: "/dashboard",
           name: "dashboard",
+          meta: { icon: "dashboard", title: "仪表盘" },
           component: {
             render: h => h("router-view")
           },
@@ -51,6 +53,7 @@ const router = new VueRouter({
             {
               path: "/dashboard/analysis",
               name: "analysis",
+              meta: { title: "分析页" },
               component: () =>
                 import(
                   /* webpackChunkName: "dashboard" */ "../views/Dashboard/Analysis"
@@ -62,11 +65,13 @@ const router = new VueRouter({
         {
           path: "/form",
           name: "form",
+          meta: { icon: "form", title: "表单" },
           component: { render: h => h("router-view") },
           children: [
             {
               path: "/form/basic-form",
               name: "basicform",
+              meta: { title: "基础表单" },
               component: () =>
                 import(
                   /* webpackChunkName: "form" */ "../views/Forms/BasicForm"
@@ -75,6 +80,8 @@ const router = new VueRouter({
             {
               path: "/form/step-form",
               name: "stepform",
+              hideChildrenInMenu: true,
+              meta: { title: "分布表单" },
               component: () =>
                 import(
                   /* webpackChunkName: "form" */ "../views/Forms/StepForm"
@@ -117,13 +124,16 @@ const router = new VueRouter({
     {
       path: "*",
       name: "404",
+      hideInMenu: true,
       component: NotFound
     }
   ]
 });
 
-router.beforeEach((to, form, next) => {
-  NProgress.start();
+router.beforeEach((to, from, next) => {
+  if (to.path !== from.path) {
+    NProgress.start();
+  }
   next();
 });
 
