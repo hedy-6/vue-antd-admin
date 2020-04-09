@@ -218,4 +218,68 @@ export default {
 
 ## 常用插件
 
-- [lodash](https://www.lodashjs.com/)
+### [axios](https://github.com/axios/axios)
+
+```
+yarn add axios
+```
+
+### [lodash](https://www.lodashjs.com/)
+
+```
+yarn add lodash
+```
+
+### [echarts](https://www.echartsjs.com/zh/index.html)
+
+```
+yarn add echarts
+yarn add resize-detector
+```
+
+#### echarts封装
+
+```
+<template>
+  <div ref="chartDom"></div>
+</template>
+<script>
+import echarts from "echarts";
+import debounce from "lodash/debounce";
+import { addListener, removeListener } from "resize-detector";
+export default {
+  props: {
+    option: {
+      type: Object,
+      default: () => {}
+    }
+  },
+  watch: {
+    option(val) {
+      this.chart.setOption(val);
+    }
+  },
+  created() {
+    this.resize = debounce(this.resize, 300); // 防抖动
+  },
+  mounted() {
+    this.renderChart();
+    addListener(this.$refs.chartDom, this.resize);
+  },
+  beforeDestroy() {
+    removeListener(this.$refs.chartDom, this.resize);
+    this.chart.dispose(); // 销毁实例
+    this.chart = null;
+  },
+  methods: {
+    resize() {
+      this.chart.resize();
+    },
+    renderChart() {
+      this.chart = echarts.init(this.$refs.chartDom);
+      this.chart.setOption(this.option);
+    }
+  }
+};
+</script>
+```
