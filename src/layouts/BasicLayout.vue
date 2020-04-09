@@ -17,6 +17,7 @@
           <a-icon
             class="trigger"
             :type="collapsed ? 'menu-unfold' : 'menu-fold'"
+            v-auth="['admin']"
             @click="collapsed = !collapsed"
           ></a-icon>
           <Header />
@@ -29,7 +30,9 @@
         </a-layout-footer>
       </a-layout>
     </a-layout>
-    <SettingDrawer />
+    <Authorized :authority="['admin']">
+      <SettingDrawer />
+    </Authorized>
   </div>
 </template>
 
@@ -76,7 +79,7 @@ export default {
   text-align: center;
   overflow: hidden;
 }
-.nav-theme-dark .logo {
+.nav-theme-dark /deep/ .logo {
   color: #ffffff;
 }
 </style>
