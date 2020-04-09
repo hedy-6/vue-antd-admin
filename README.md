@@ -314,3 +314,37 @@ devServer: {
   }
 }
 ```
+
+## IE 浏览器兼容
+
+> browserslist 
+
+```package.json``` 文件里的 ```browserslist``` 字段 (或一个单独的 ```.browserslistrc``` 文件)，指定项目的目标浏览器的范围。这个值会被 @babel/preset-env 和 Autoprefixer 用来确定需要转译的 JavaScript 特性和需要添加的 CSS 浏览器前缀。
+
+> Polyfill
+
+**```useBuiltIns: 'usage'```**
+
+根据源代码中出现的语言特性自动检测需要的 polyfill。这确保了最终包里 polyfill 数量的最小化。然而，这也意味着如果其中一个依赖需要特殊的 polyfill，默认情况下 Babel 无法将其检测出来。
+
+如果有依赖需要 polyfill，你有几种选择：
+
+1. 如果该依赖基于一个目标环境不支持的 ES 版本撰写: 将其添加到 vue.config.js 中的 transpileDependencies 选项。这会为该依赖同时开启语法转换和根据使用情况检测 polyfill。
+
+2. 如果该依赖交付了 ES5 代码并显式地列出了需要的 polyfill: 你可以使用 @vue/babel-preset-app 的 polyfills 选项预包含所需要的 polyfill。注意 es.promise 将被默认包含，因为现在的库依赖 Promise 是非常普遍的。
+
+```
+// babel.config.js
+module.exports = {
+  presets: [
+    ['@vue/app', {
+      polyfills: [
+        'es.promise',
+        'es.symbol'
+      ]
+    }]
+  ]
+}
+```
+
+3. 如果该依赖交付 ES5 代码，但使用了 ES6+ 特性且没有显式地列出需要的 polyfill (例如 Vuetify)：请使用 useBuiltIns: 'entry' 然后在入口文件添加 import 'core-js/stable'; import 'regenerator-runtime/runtime';。这会根据 browserslist 目标导入所有 polyfill，这样你就不用再担心依赖的 polyfill 问题了，但是因为包含了一些没有用到的 polyfill 所以最终的包大小可能会增加。

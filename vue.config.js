@@ -1,4 +1,12 @@
 module.exports = {
+  transpileDependencies: [
+    "ant-design-vue",
+    "axios",
+    "echarts",
+    "lodash",
+    "nprogress",
+    "resize-detector"
+  ],
   css: {
     loaderOptions: {
       less: {
