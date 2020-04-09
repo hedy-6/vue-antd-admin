@@ -44,10 +44,8 @@ yarn add ant-design-vue
 在 main.js 中引入：
 
 ```
-import { DatePicker } from 'ant-design-vue';
-// import Antd from 'ant-design-vue';
+import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
-
 Vue.use(DatePicker);
 ```
 
@@ -93,4 +91,25 @@ plugins: [
 import { DatePicker } from 'ant-design-vue';
 
 Vue.use(DatePicker);
+```
+
+## 配置路由
+
+### 页面路由跳转进度条
+```
+yarn add nprogress
+```
+
+```
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
+
+router.beforeEach((to, form, next) => {
+  NProgress.start();
+  next();
+});
+
+router.afterEach(() => {
+  NProgress.done();
+});
 ```

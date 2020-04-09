@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { Button } from "ant-design-vue";
+import { Layout, Button, Icon } from "ant-design-vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
@@ -7,7 +7,9 @@ import "ant-design-vue/dist/antd.less";
 
 Vue.config.productionTip = false;
 
+Vue.use(Layout);
 Vue.use(Button);
+Vue.use(Icon);
 
 new Vue({
   router,
