@@ -404,6 +404,29 @@ export default {
 </script>
 ```
 
+## 国际化语言
+
+```
+yarn add vue-i18n
+```
+
+```
+import VueI18n from "vue-i18n";
+import en_US from "./locale/en_US";
+import zh_CN from "./locale/zh_CN";
+import queryString from "query-string";
+
+Vue.use(VueI18n);
+
+const i18n = new VueI18n({
+  locale: queryString.parse(location.search).locale || "zh_CN",
+  messages: {
+    zh_CN: { message: zh_CN },
+    en_US: { message: en_US }
+  }
+});
+```
+
 ## 本地模拟数据
 
 在根目录下新建mock目录，目录下文件名命名规则为```moduleName_functionName```
