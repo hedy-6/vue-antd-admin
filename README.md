@@ -224,6 +224,38 @@ export default {
 yarn add axios
 ```
 
+#### axios 封装
+
+```
+import axios from "axios";
+import { notification } from "ant-design-vue";
+
+function request(options) {
+  return axios(options)
+    .then(res => {
+      return res;
+    })
+    .catch(error => {
+      console.info("error", error);
+      const {
+        response: { status, statusText }
+      } = error;
+      notification.error({
+        // eslint-disable-next-line no-unused-vars
+        message: h => (
+          <div>
+            请求错误<span style="color: red">{status}</span>: {options.url}
+          </div>
+        ),
+        description: statusText
+      });
+      return Promise.reject(error);
+    });
+}
+
+export default request;
+```
+
 ### [lodash](https://www.lodashjs.com/)
 
 ```
@@ -288,6 +320,23 @@ export default {
 
 在根目录下新建mock目录，目录下文件名命名规则为```moduleName_functionName```
 
+```
+function chart(method) {
+  let res = null;
+  switch (method) {
+    case "GET":
+      res = [20, 40, 87, 65, 38, 17];
+      break;
+    default:
+      res = null;
+      break;
+  }
+  return res;
+}
+
+module.exports = chart;
+```
+
 在```vue.config.js```中配置
 
 ```
@@ -295,11 +344,11 @@ devServer: {
   proxy: {
     "/api": {
       target: "http://localhost:3000",
-      bypass: function (req, res) {
+      bypass: function(req, res) {
         if (req.headers.accept.indexOf("html") !== -1) {
           console.log("Skipping proxy for browser request.");
           return "/index.html";
-        } else {
+        } else if (process.env.Mock !== "none") {
           const name = req.path
             .split("/api/")[1]
             .split("/")
@@ -348,3 +397,36 @@ module.exports = {
 ```
 
 3. 如果该依赖交付 ES5 代码，但使用了 ES6+ 特性且没有显式地列出需要的 polyfill (例如 Vuetify)：请使用 useBuiltIns: 'entry' 然后在入口文件添加 import 'core-js/stable'; import 'regenerator-runtime/runtime';。这会根据 browserslist 目标导入所有 polyfill，这样你就不用再担心依赖的 polyfill 问题了，但是因为包含了一些没有用到的 polyfill 所以最终的包大小可能会增加。
+
+## 配置环境变量
+
+设置环境变量时，在windows命令会提示报错。cross-env 可以帮助我们解决跨平台设置问题；
+
+```
+yarn add cross-env --dev
+```
+
+```
+// package.json中
+"scripts": {
+  "serve:no-mock": "cross-env Mock=none vue-cli-service serve",
+}
+
+// console.log(process.env.Mock)
+none
+```
+
+## 使用 JSX
+
+环境：Babel 7+、Vue 2+
+
+```
+yarn add @vue/babel-preset-jsx @vue/babel-helper-vue-jsx-merge-props --dev
+```
+
+在 babel.config.js 中增加如下配置：
+```
+{
+  "presets": ["@vue/babel-preset-jsx"]
+}
+```
