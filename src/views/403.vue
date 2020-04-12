@@ -1,9 +1,23 @@
 <template>
-  <div>403</div>
+  <div>
+    <!-- <img :src="forbidden" alt /> -->
+    <forbidden />
+  </div>
 </template>
 
 <script>
-export default {};
+import forbidden from "@/assets/403.svg";
+
+export default {
+  components: {
+    forbidden
+  }
+  // data() {
+  //   return {
+  //     forbidden
+  //   };
+  // }
+};
 </script>
 
 <style scoped></style>

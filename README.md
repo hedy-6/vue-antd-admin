@@ -27,6 +27,12 @@ yarn test:unit
 yarn lint
 ```
 
+### 查看内部配置文件
+
+```
+vue inspect > output.js
+```
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
@@ -311,6 +317,88 @@ export default {
       this.chart = echarts.init(this.$refs.chartDom);
       this.chart.setOption(this.option);
     }
+  }
+};
+</script>
+```
+
+## 管理系统中的图标
+
+### 使用iconfont.cn
+
+在[iconfont](https://www.iconfont.cn/)上搜索想要的图标，然后加入购物车，最后添加至项目；在项目图标管理页面，选择 Symbol 格式，点击查看在线链接=>生成代码=>复制代码链接。
+
+```
+import { Icon } from "ant-design-vue";
+
+const IconFont = Icon.createFromIconfontCN({
+  scriptUrl: "//at.alicdn.com/t/font_1749607_ngj29yuthrr.js"
+});
+Vue.component("IconFont", IconFont);
+```
+
+```
+<IconFont type="icon-icon-404" style="font-size: 30px;" />
+```
+
+### 使用 svg
+
+#### 使用 fileLoader 将 .svg 处理成 url
+
+```
+<template>
+  <div>
+    <img :src="forbidden" alt />
+  </div>
+</template>
+
+<script>
+import forbidden from "@/assets/403.svg";
+
+export default {
+  data() {
+    return {
+      forbidden
+    };
+  }
+};
+</script>
+```
+
+#### 使用 svg-loader
+
+* 安装
+```
+yarn add --dev vue-svg-loader
+```
+* 配置
+```
+// vue.config.js
+chainWebpack: config => {
+  const svgRule = config.module.rule("svg");
+
+  // 清除已有的所有 loader。
+  // 如果你不这样做，接下来的 loader 会附加在该规则现有的 loader 之后。
+  svgRule.uses.clear();
+
+  // 添加要替换的 loader
+  svgRule.use("vue-svg-loader").loader("vue-svg-loader");
+},
+```
+* 使用
+```
+<template>
+  <div>
+    <forbidden />
+  </div>
+</template>
+
+<script>
+import forbidden from "@/assets/403.svg";
+
+export default {
+  components: {
+    forbidden
   }
 };
 </script>
