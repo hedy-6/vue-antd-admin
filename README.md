@@ -27,10 +27,11 @@ yarn test:unit
 yarn lint
 ```
 
-### 查看内部配置文件
-
 ```
+// 查看内部配置文件
 vue inspect > output.js
+// 打包报告
+yarn build -- --report
 ```
 
 ### Customize configuration
